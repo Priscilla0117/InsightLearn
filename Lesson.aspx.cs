@@ -232,7 +232,7 @@ public partial class Lesson : Page
         progressFill.Attributes["data-width"] = pct + "%";
     }
 
-    // Enable/disable prev and next buttons based on position
+    // Show/hide prev and next buttons based on lesson position
     private void SetNavigationButtons(SqlConnection conn, int cid, int currentLid)
     {
         // Check if there is a previous lesson
@@ -240,14 +240,16 @@ public partial class Lesson : Page
             "SELECT TOP 1 lesson_id FROM Lessons WHERE course_id=@cid AND lesson_id < @lid ORDER BY lesson_id DESC", conn);
         prevCmd.Parameters.AddWithValue("@cid", cid);
         prevCmd.Parameters.AddWithValue("@lid", currentLid);
-        btnPrevLesson.Enabled = prevCmd.ExecuteScalar() != null;
+        bool hasPreviousLesson = prevCmd.ExecuteScalar() != null;
+        btnPrevLesson.Visible = hasPreviousLesson;
 
         // Check if there is a next lesson
         SqlCommand nextCmd = new SqlCommand(
             "SELECT TOP 1 lesson_id FROM Lessons WHERE course_id=@cid AND lesson_id > @lid ORDER BY lesson_id ASC", conn);
         nextCmd.Parameters.AddWithValue("@cid", cid);
         nextCmd.Parameters.AddWithValue("@lid", currentLid);
-        btnNextLesson.Enabled = nextCmd.ExecuteScalar() != null;
+        bool hasNextLesson = nextCmd.ExecuteScalar() != null;
+        btnNextLesson.Visible = hasNextLesson;
     }
 
     // Mark current lesson as completed

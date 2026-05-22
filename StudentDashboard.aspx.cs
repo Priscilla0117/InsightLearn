@@ -34,6 +34,13 @@ public partial class StudentDashboard : Page
         }
     }
 
+    protected void lbDashboardLogout_Click(object sender, EventArgs e)
+    {
+        Session.Clear();
+        Session.Abandon();
+        Response.Redirect("Login.aspx");
+    }
+
     // Load the 4 statistics cards from database
     private void LoadStats(int userId)
     {
