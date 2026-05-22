@@ -105,23 +105,28 @@
 
           <!-- OVERALL PROGRESS CARD -->
           <div class="card progress-card">
-              <div class="card-header"><h3>Overall Progress</h3></div>
-              <div class="card-body">
-                  <div class="progress-top">
-                      <span class="label">Completed</span>
-                      <span class="pct"><asp:Label ID="lblProgressPct" runat="server">0</asp:Label>%</span>
-                  </div>
-                  <div class="progress-bar-wrap">
-                      <asp:Panel ID="pnlProgressBar" runat="server">
-                          <div class="progress-bar-fill" id="progressFill" runat="server"></div>
-                      </asp:Panel>
-                  </div>
-                  <div class="progress-note">
-                      <asp:Literal ID="litCompletedCount" runat="server">0</asp:Literal> of
-                      <asp:Literal ID="litTotalLessons" runat="server">0</asp:Literal> lessons completed
-                  </div>
-              </div>
-          </div>
+            <div class="card-header">
+                <h3>Overall Progress</h3>
+            </div>
+
+            <div class="card-body">
+                <div class="progress-top">
+                    <span class="label">Completed</span>
+                    <span class="pct">
+                        <asp:Label ID="lblProgressPct" runat="server">0</asp:Label>%
+                    </span>
+                </div>
+
+                <div class="progress-bar-wrap">
+                    <div class="progress-bar-fill" id="progressFill" runat="server"></div>
+                </div>
+
+                <div class="progress-note">
+                    <asp:Literal ID="litCompletedCount" runat="server">0</asp:Literal> of
+                    <asp:Literal ID="litTotalLessons" runat="server">0</asp:Literal> lessons completed
+                </div>
+            </div>
+        </div>
 
           <!-- LESSON LIST -->
           <div class="card lesson-list-card">
