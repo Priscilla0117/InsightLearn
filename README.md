@@ -1,6 +1,6 @@
 # InsightLearn 📚
 
-A full-featured e-learning platform built with ASP.NET Web Forms as a university Web Technology project.
+A full-featured e-learning platform built with ASP.NET Web Forms.
 
 ---
 
