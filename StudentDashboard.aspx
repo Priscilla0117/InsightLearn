@@ -194,8 +194,11 @@
             <h4>&#9889; Quick Actions</h4>
             <a href="CourseList.aspx" class="quick-action-btn">Browse Courses</a>
             <a href="Certificate.aspx" class="quick-action-btn outline">View Certificates</a>
-            <a href="Login.aspx" class="quick-action-btn outline"
-               onclick="return confirm('Log out?');">Settings / Logout</a>
+            <asp:LinkButton ID="lbDashboardLogout" runat="server"
+                CssClass="quick-action-btn outline"
+                OnClick="lbDashboardLogout_Click"
+                OnClientClick="return confirm('Log out?');"
+                CausesValidation="false">Logout</asp:LinkButton>
         </div>
 
       </div><!-- /sidebar -->
