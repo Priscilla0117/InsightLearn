@@ -4,18 +4,6 @@ A full-featured e-learning platform built with ASP.NET Web Forms as a university
 
 ---
 
-## 👥 Team Members
-
-| Name | Role |
-|------|------|
-| Ng Ern Chi | Project Lead |
-| Oswald Loh Kar Tzun | Backend Developer |
-| Chan Kar Jun | Frontend Developer |
-| Ian Lim | UI/UX Designer |
-| Foo Kim Chean | Database Engineer |
-
----
-
 ## ✨ Features
 
 - **Student**
@@ -55,12 +43,12 @@ InsightLearn/
 ├── App_Data/               # SQL Server LocalDB database files (.mdf, .ldf)
 ├── Images/                 # Team member photos
 ├── Scripts/                # JavaScript (scripts.js)
-├── Styles/                 # CSS files (split by team member)
-│   ├── base.css            # Variables, reset, utility — Ng Ern Chi
-│   ├── layout.css          # Navbar, footer, responsive — Chan Kar Jun
-│   ├── components.css      # Buttons, cards, forms, shared — Ian Lim
-│   ├── student-pages.css   # Student-facing pages — Foo Kim Chean
-│   └── admin-pages.css     # Admin-facing pages — Oswald Loh Kar Tzun
+├── Styles/                 # CSS files 
+│   ├── base.css            # Variables, reset, utility
+│   ├── layout.css          # Navbar, footer, responsive 
+│   ├── components.css      # Buttons, cards, forms, shared 
+│   ├── student-pages.css   # Student-facing pages
+│   └── admin-pages.css     # Admin-facing pages 
 │
 ├── Site.master             # Master page for student-facing pages
 ├── AdminSite.master        # Master page for admin pages
@@ -93,7 +81,7 @@ InsightLearn/
 ## ⚙️ Setup Instructions
 
 ### Prerequisites
-- Visual Studio 2022 (with **ASP.NET and web development** workload)
+- Visual Studio 2019 (with **ASP.NET and web development** workload)
 - SQL Server Express / LocalDB (included with Visual Studio)
 
 ### Steps
@@ -128,8 +116,8 @@ Option B — Create from the SQL script:
 
 | Role | Email | Password |
 |------|-------|----------|
-| Admin | admin@insightlearn.com | admin123 |
-| Student | student@example.com | student123 |
+| Admin |admin@insightlearn.com | Admin@123 |
+| Student | john@student.com | Student@123 |
 
 > ℹ️ Check `database.sql` for the full list of seed accounts.
 
@@ -150,11 +138,4 @@ Main tables:
 | `Questions` | Quiz questions (multiple choice) |
 | `Quiz_Attempts` | Student quiz attempt history |
 
----
 
-## 📝 Notes
-
-- The project uses **ASP.NET Web Forms** — no MVC, no Razor Pages
-- Passwords are stored as **SHA-256 hashes** in the database
-- CSS is split into 5 files (one per team member) loaded via the master pages
-- Videos are embedded via YouTube iframe (use YouTube embed URLs in admin panel)
