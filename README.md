@@ -31,7 +31,7 @@ A full-featured e-learning platform built with ASP.NET Web Forms as a university
 | Backend | ASP.NET Web Forms (.NET Framework 4.7.2) |
 | Database | SQL Server LocalDB + ADO.NET |
 | Frontend | HTML5, CSS3 (Flexbox & Grid), JavaScript |
-| IDE | Visual Studio 2022 |
+| IDE | Visual Studio 2019 |
 
 ---
 
