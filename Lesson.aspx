@@ -89,7 +89,7 @@
                   CssClass="btn btn-outline" />
 
               <asp:Button ID="btnMarkComplete" runat="server"
-                  Text="Mark as Complete &#10003;"
+                  Text="Mark as Complete"
                   OnClick="btnMarkComplete_Click"
                   CssClass="btn btn-success" />
 

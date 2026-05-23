@@ -90,8 +90,7 @@
               <asp:Button ID="btnFlag" runat="server"
                   Text="Flag for Review"
                   OnClick="btnFlag_Click"
-                  CssClass="btn btn-outline"
-                  style="color:#F59E0B; border-color:#F59E0B;" />
+                  CssClass="btn btn-outline btn-flag" />
 
               <asp:Button ID="btnNextQ" runat="server"
                   Text="Next Question &rarr;"

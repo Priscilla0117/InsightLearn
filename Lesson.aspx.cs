@@ -316,9 +316,9 @@ public partial class Lesson : Page
             }
         }
 
-        lblCompleteMsg.Text    = "✓ Lesson marked as complete! Great work!";
+        lblCompleteMsg.Text    = "Lesson marked as complete! Great work!";
         lblCompleteMsg.Visible = true;
-        btnMarkComplete.Text   = "✓ Completed";
+        btnMarkComplete.Text   = "Completed";
         btnMarkComplete.Enabled = false;
 
         LoadLessonPage(); // Refresh progress

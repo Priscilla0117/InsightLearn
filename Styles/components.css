@@ -508,3 +508,26 @@ select.form-control-asp {
 .empty-state { text-align: center; padding: 48px 20px; color: var(--text-light); }
 .empty-state .empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
 .empty-state h3 { font-weight: 700; color: var(--text); margin-bottom: 6px; }
+
+.btn-outline.btn-flag {
+    color: #F59E0B;
+    border-color: #F59E0B;
+}
+
+.btn-outline.btn-flag:hover {
+    background: #F59E0B;
+    color: #fff;
+    border-color: #F59E0B;
+}
+
+.btn-flag-active {
+    background: #F59E0B;
+    border-color: #F59E0B;
+    color: #fff;
+}
+
+.btn-flag-active:hover {
+    background: #D97706;
+    border-color: #D97706;
+    color: #fff;
+}
