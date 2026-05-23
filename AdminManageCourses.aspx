@@ -1,5 +1,10 @@
 <%@ Page Language="C#" AutoEventWireup="true" CodeFile="AdminManageCourses.aspx.cs" Inherits="AdminManageCourses"
     MasterPageFile="~/AdminSite.master" Title="Manage Courses" %>
+<%--
+    Author:      Ng Ern Chi
+    Description: Course management page (ASPX markup)
+    Date:        23/5/2026
+--%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="cphTitle" runat="server">
     Manage Courses

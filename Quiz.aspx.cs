@@ -1,3 +1,8 @@
+/*
+ * Author:      Chan Kar Jun
+ * Description: Student quiz-taking page (code-behind)
+ * Date:        23/5/2026
+ */
 using System;
 using System.Collections.Generic;
 using System.Configuration;

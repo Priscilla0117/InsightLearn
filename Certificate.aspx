@@ -1,5 +1,10 @@
 <%@ Page Language="C#" AutoEventWireup="true" CodeFile="Certificate.aspx.cs" Inherits="Certificate"
     MasterPageFile="~/Site.master" Title="My Certificates" %>
+<%--
+    Author:      Foo Kim Chean
+    Description: Course completion certificate page (ASPX markup)
+    Date:        23/5/2026
+--%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="cphTitle" runat="server">My Certificates</asp:Content>
 

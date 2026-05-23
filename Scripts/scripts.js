@@ -1,3 +1,8 @@
+/*
+ * Author:      Chan Kar Jun
+ * Description: Client-side JavaScript (bar chart, UI interactions)
+ * Date:        23/5/2026
+ */
 // =====================================================
 // InsightLearn - Client-Side JavaScript
 // =====================================================

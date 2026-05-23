@@ -1,3 +1,8 @@
+/*
+ * Author:      Chan Kar Jun, Ng Ern Chi, Foo Kim Chean, Ian Lim, Oswald Loh Kar Tzun
+ * Description: InsightLearn Database Schema and Sample Data
+ * Date:        23/5/2026
+ */
 -- ============================================================
 -- InsightLearn Database Setup Script
 -- SQL Server LocalDB (.mdf)

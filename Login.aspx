@@ -1,5 +1,10 @@
 <%@ Page Language="C#" AutoEventWireup="true" CodeFile="Login.aspx.cs" Inherits="Login"
     MasterPageFile="~/Site.master" Title="Login" %>
+<%--
+    Author:      Ian Lim
+    Description: Login page (ASPX markup)
+    Date:        23/5/2026
+--%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="cphTitle" runat="server">Login</asp:Content>
 

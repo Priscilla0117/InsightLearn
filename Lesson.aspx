@@ -1,5 +1,10 @@
 <%@ Page Language="C#" AutoEventWireup="true" CodeFile="Lesson.aspx.cs" Inherits="Lesson"
     MasterPageFile="~/Site.master" Title="Lesson" %>
+<%--
+    Author:      Foo Kim Chean
+    Description: Student lesson viewer page (ASPX markup)
+    Date:        23/5/2026
+--%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="cphTitle" runat="server">
     <asp:Literal ID="litTitle" runat="server">Lesson</asp:Literal>

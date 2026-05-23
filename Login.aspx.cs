@@ -1,3 +1,8 @@
+/*
+ * Author:      Ian Lim
+ * Description: Login page (code-behind)
+ * Date:        23/5/2026
+ */
 using System;
 using System.Configuration;
 using System.Data;

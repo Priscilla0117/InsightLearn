@@ -1,5 +1,10 @@
 <%@ Page Language="C#" AutoEventWireup="true" CodeFile="About.aspx.cs" Inherits="About"
     MasterPageFile="~/Site.master" Title="About Us" %>
+<%--
+    Author:      Oswald Loh Kar Tzun
+    Description: About us team page (ASPX markup)
+    Date:        23/5/2026
+--%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="cphTitle" runat="server">About Us</asp:Content>
 
@@ -72,35 +77,35 @@
                 <img src="Images/Ng%20Ern%20Chi.jpg" alt="Ng Ern Chi" class="team-photo"
                     style="object-position: center 12%;" />
                 <div class="member-name">Ng Ern Chi</div>
-                <div class="member-role">Project Lead</div>
+                <div class="member-role">Course Module Engineer</div>
             </div>
 
             <div class="team-member">
                 <img src="Images/Oswald%20Loh%20Kar%20Tzun.jpg" alt="Oswald Loh Kar Tzun" class="team-photo"
                     style="object-position: center 18%;" />
                 <div class="member-name">Oswald Loh Kar Tzun</div>
-                <div class="member-role">Backend Developer</div>
+                <div class="member-role">Analytics Module Engineer</div>
             </div>
 
             <div class="team-member">
                 <img src="Images/Chan%20Kar%20Jun.jpeg" alt="Chan Kar Jun" class="team-photo"
                     style="object-position: center 45%;" />
                 <div class="member-name">Chan Kar Jun</div>
-                <div class="member-role">Frontend Developer</div>
+                <div class="member-role">Assessment Module Engineer</div>
             </div>
 
             <div class="team-member">
                 <img src="Images/Ian%20Lim.png" alt="Ian Lim" class="team-photo"
                     style="object-position: center 10%;" />
                 <div class="member-name">Ian Lim</div>
-                <div class="member-role">UI/UX Designer</div>
+                <div class="member-role">User Access Engineer</div>
             </div>
 
             <div class="team-member">
                 <img src="Images/Foo%20Kim%20Chean.jpeg" alt="Foo Kim Chean" class="team-photo"
                     style="object-fit: contain; object-position: center 30%; background-color: #ffffff;" />
                 <div class="member-name">Foo Kim Chean</div>
-                <div class="member-role">Database Engineer</div>
+                <div class="member-role">Learning Progress Engineer</div>
             </div>
 
         </div>

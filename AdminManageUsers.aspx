@@ -1,5 +1,10 @@
 <%@ Page Language="C#" AutoEventWireup="true" CodeFile="AdminManageUsers.aspx.cs" Inherits="AdminManageUsers"
     MasterPageFile="~/AdminSite.master" Title="Manage Users" %>
+<%--
+    Author:      Ian Lim
+    Description: User management page (ASPX markup)
+    Date:        23/5/2026
+--%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="cphTitle" runat="server">
     Manage Users

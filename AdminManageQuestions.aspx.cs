@@ -1,3 +1,8 @@
+/*
+ * Author:      Oswald Loh Kar Tzun
+ * Description: Question bank management page (code-behind)
+ * Date:        23/5/2026
+ */
 using System;
 using System.Configuration;
 using System.Data;

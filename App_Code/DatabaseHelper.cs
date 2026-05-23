@@ -1,3 +1,8 @@
+/*
+ * Author:      Ng Ern Chi
+ * Description: Database utility helper (publish column check)
+ * Date:        23/5/2026
+ */
 using System;
 using System.Data;
 using System.Data.SqlClient;

@@ -1,5 +1,10 @@
 <%@ Page Language="C#" AutoEventWireup="true" CodeFile="StudentDashboard.aspx.cs" Inherits="StudentDashboard"
     MasterPageFile="~/Site.master" Title="My Dashboard" %>
+<%--
+    Author:      Oswald Loh Kar Tzun
+    Description: Student progress dashboard (ASPX markup)
+    Date:        23/5/2026
+--%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="cphTitle" runat="server">My Dashboard</asp:Content>
 

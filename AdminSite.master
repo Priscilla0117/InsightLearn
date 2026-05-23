@@ -1,4 +1,9 @@
 <%@ Master Language="C#" AutoEventWireup="true" CodeFile="AdminSite.master.cs" Inherits="AdminSite" %>
+<%--
+    Author:      Ian Lim
+    Description: Admin master page layout
+    Date:        23/5/2026
+--%>
 <!DOCTYPE html>
 <html lang="en">
 <head runat="server">

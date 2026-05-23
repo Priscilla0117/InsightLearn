@@ -1,5 +1,10 @@
 <%@ Page Language="C#" AutoEventWireup="true" CodeFile="Settings.aspx.cs" Inherits="Settings"
     MasterPageFile="~/Site.master" Title="Account Settings" %>
+<%--
+    Author:      Ian Lim
+    Description: Account settings page (ASPX markup)
+    Date:        23/5/2026
+--%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="cphTitle" runat="server">Account Settings</asp:Content>
 
