@@ -193,10 +193,9 @@ public partial class AdminManageUsers : Page
 
             if (reader.Read())
             {
-                hdnEditUserId.Value  = reader["user_id"].ToString();
-                txtEditName.Text     = reader["name"].ToString();
-                txtEditEmail.Text    = reader["email"].ToString();
-                txtEditPassword.Text = "";
+                hdnEditUserId.Value       = reader["user_id"].ToString();
+                txtEditName.Text          = reader["name"].ToString();
+                txtEditEmail.Text         = reader["email"].ToString();
                 ddlEditRole.SelectedValue = reader["role"].ToString();
             }
         }
@@ -209,11 +208,10 @@ public partial class AdminManageUsers : Page
     {
         if (!Page.IsValid) return;
 
-        int userId    = int.Parse(hdnEditUserId.Value);
-        string name   = txtEditName.Text.Trim();
-        string email  = txtEditEmail.Text.Trim();
-        string newPwd = txtEditPassword.Text;
-        string role   = ddlEditRole.SelectedValue;
+        int userId   = int.Parse(hdnEditUserId.Value);
+        string name  = txtEditName.Text.Trim();
+        string email = txtEditEmail.Text.Trim();
+        string role  = ddlEditRole.SelectedValue;
 
         string connStr = ConfigurationManager.ConnectionStrings["InsightLearnDB"].ConnectionString;
 
@@ -233,29 +231,13 @@ public partial class AdminManageUsers : Page
                 return;
             }
 
-            if (!string.IsNullOrEmpty(newPwd))
-            {
-                // Update with new password
-                SqlCommand cmd = new SqlCommand(
-                    "UPDATE Users SET name=@name, email=@email, password=@pwd, role=@role WHERE user_id=@uid", conn);
-                cmd.Parameters.AddWithValue("@name",  name);
-                cmd.Parameters.AddWithValue("@email", email);
-                cmd.Parameters.AddWithValue("@pwd",   newPwd);
-                cmd.Parameters.AddWithValue("@role",  role);
-                cmd.Parameters.AddWithValue("@uid",   userId);
-                cmd.ExecuteNonQuery();
-            }
-            else
-            {
-                // Update without changing password
-                SqlCommand cmd = new SqlCommand(
-                    "UPDATE Users SET name=@name, email=@email, role=@role WHERE user_id=@uid", conn);
-                cmd.Parameters.AddWithValue("@name",  name);
-                cmd.Parameters.AddWithValue("@email", email);
-                cmd.Parameters.AddWithValue("@role",  role);
-                cmd.Parameters.AddWithValue("@uid",   userId);
-                cmd.ExecuteNonQuery();
-            }
+            SqlCommand cmd = new SqlCommand(
+                "UPDATE Users SET name=@name, email=@email, role=@role WHERE user_id=@uid", conn);
+            cmd.Parameters.AddWithValue("@name",  name);
+            cmd.Parameters.AddWithValue("@email", email);
+            cmd.Parameters.AddWithValue("@role",  role);
+            cmd.Parameters.AddWithValue("@uid",   userId);
+            cmd.ExecuteNonQuery();
         }
 
         pnlEditUser.Visible = false;

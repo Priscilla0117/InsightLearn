@@ -151,15 +151,6 @@
         </div>
         <div class="form-row">
             <div class="form-group">
-                <label>New Password <small style="color:var(--text-light);">(leave blank to keep current)</small></label>
-                <asp:TextBox ID="txtEditPassword" runat="server" CssClass="form-control"
-                    TextMode="Password" placeholder="Leave blank to keep current" MaxLength="100" />
-                <asp:RegularExpressionValidator runat="server" ControlToValidate="txtEditPassword"
-                    ValidationGroup="EditUser" CssClass="field-validator"
-                    ValidationExpression="^(.{6,})?$"
-                    ErrorMessage="New password must be at least 6 characters." Display="Dynamic">New password must be at least 6 characters if provided.</asp:RegularExpressionValidator>
-            </div>
-            <div class="form-group">
                 <label>Role *</label>
                 <asp:DropDownList ID="ddlEditRole" runat="server" CssClass="form-control">
                     <asp:ListItem Value="student">Student</asp:ListItem>

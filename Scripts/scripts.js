@@ -1,5 +1,5 @@
 /*
- * Author:      Chan Kar Jun
+ * Author:      ALL MEMBER (SHARED FILE)
  * Description: Client-side JavaScript (bar chart, UI interactions)
  * Date:        23/5/2026
  */

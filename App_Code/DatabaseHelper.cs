@@ -1,5 +1,5 @@
 /*
- * Author:      Ng Ern Chi
+ * Author:      SHARED FILE
  * Description: Database utility helper (publish column check)
  * Date:        23/5/2026
  */
