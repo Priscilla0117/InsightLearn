@@ -24,12 +24,14 @@ public partial class AdminManageCourses : Page
         using (SqlConnection conn = new SqlConnection(connStr))
         {
             conn.Open();
+            DatabaseHelper.EnsureCoursePublishedColumn(conn);
 
             string sql = @"
                 SELECT
                     c.course_id,
                     c.course_name,
                     c.category,
+                    c.published,
                     (SELECT COUNT(*) FROM Lessons  l WHERE l.course_id = c.course_id) AS lesson_count,
                     (SELECT COUNT(*) FROM Quizzes  q WHERE q.course_id = c.course_id) AS quiz_count,
                     (SELECT COUNT(*) FROM Enrollment e WHERE e.course_id = c.course_id) AS enrolled
@@ -132,6 +134,8 @@ public partial class AdminManageCourses : Page
         using (SqlConnection conn = new SqlConnection(connStr))
         {
             conn.Open();
+            DatabaseHelper.EnsureCoursePublishedColumn(conn);
+
             SqlCommand cmd = new SqlCommand(
                 "INSERT INTO Courses (course_name, description, category) VALUES (@name, @desc, @cat)", conn);
             cmd.Parameters.AddWithValue("@name", name);
@@ -156,6 +160,10 @@ public partial class AdminManageCourses : Page
         else if (e.CommandName == "DeleteCourse")
         {
             DeleteCourse(courseId);
+        }
+        else if (e.CommandName == "TogglePublish")
+        {
+            ToggleCoursePublished(courseId);
         }
     }
 
@@ -232,6 +240,55 @@ public partial class AdminManageCourses : Page
         }
 
         ShowMessage("&#10003; Course deleted successfully.", true);
+        LoadCourses();
+    }
+
+    private void ToggleCoursePublished(int courseId)
+    {
+        string connStr = ConfigurationManager.ConnectionStrings["InsightLearnDB"].ConnectionString;
+
+        using (SqlConnection conn = new SqlConnection(connStr))
+        {
+            conn.Open();
+            DatabaseHelper.EnsureCoursePublishedColumn(conn);
+
+            SqlCommand infoCmd = new SqlCommand(@"
+                SELECT
+                    published,
+                    (SELECT COUNT(*) FROM Lessons l WHERE l.course_id = Courses.course_id) AS lesson_count,
+                    (SELECT COUNT(*) FROM Quizzes q WHERE q.course_id = Courses.course_id) AS quiz_count
+                FROM Courses
+                WHERE course_id = @cid", conn);
+            infoCmd.Parameters.AddWithValue("@cid", courseId);
+
+            SqlDataReader reader = infoCmd.ExecuteReader();
+            if (!reader.Read())
+            {
+                reader.Close();
+                ShowMessage("Course not found.", false);
+                return;
+            }
+
+            bool isPublished = Convert.ToBoolean(reader["published"]);
+            int lessonCount = Convert.ToInt32(reader["lesson_count"]);
+            int quizCount = Convert.ToInt32(reader["quiz_count"]);
+            reader.Close();
+
+            if (!isPublished && (lessonCount == 0 || quizCount == 0))
+            {
+                ShowMessage("Add at least one lesson and one quiz before publishing this course.", false);
+                LoadCourses();
+                return;
+            }
+
+            SqlCommand updateCmd = new SqlCommand(
+                "UPDATE Courses SET published = @published WHERE course_id = @cid", conn);
+            updateCmd.Parameters.AddWithValue("@published", isPublished ? 0 : 1);
+            updateCmd.Parameters.AddWithValue("@cid", courseId);
+            updateCmd.ExecuteNonQuery();
+        }
+
+        ShowMessage("&#10003; Course publish status updated.", true);
         LoadCourses();
     }
 

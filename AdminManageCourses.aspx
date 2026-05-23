@@ -181,9 +181,22 @@
                 <asp:BoundField DataField="lesson_count" HeaderText="Lessons"  ItemStyle-Width="80px" />
                 <asp:BoundField DataField="quiz_count"   HeaderText="Quizzes"  ItemStyle-Width="80px" />
                 <asp:BoundField DataField="enrolled"     HeaderText="Enrolled" ItemStyle-Width="80px" />
-                <asp:TemplateField HeaderText="Actions" ItemStyle-Width="150px">
+                <asp:TemplateField HeaderText="Status" ItemStyle-Width="110px">
+                    <ItemTemplate>
+                        <span class='badge <%# Convert.ToBoolean(Eval("published")) ? "badge-success" : "badge-gray" %>'>
+                            <%# Convert.ToBoolean(Eval("published")) ? "Published" : "Unpublished" %>
+                        </span>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Actions" ItemStyle-Width="240px">
                     <ItemTemplate>
                         <div class="table-actions">
+                            <asp:LinkButton ID="lbTogglePublish" runat="server"
+                                CommandName="TogglePublish"
+                                CommandArgument='<%# Eval("course_id") %>'
+                                Text='<%# Convert.ToBoolean(Eval("published")) ? "Unpublish" : "Publish" %>'
+                                CssClass='<%# Convert.ToBoolean(Eval("published")) ? "btn btn-outline btn-sm" : "btn btn-success btn-sm" %>'
+                                OnClientClick="return confirm('Change publish status for this course?');" />
                             <asp:LinkButton ID="lbEdit" runat="server"
                                 CommandName="EditCourse"
                                 CommandArgument='<%# Eval("course_id") %>'

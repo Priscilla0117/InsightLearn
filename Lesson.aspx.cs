@@ -47,6 +47,22 @@ public partial class Lesson : Page
         using (SqlConnection conn = new SqlConnection(connStr))
         {
             conn.Open();
+            DatabaseHelper.EnsureCoursePublishedColumn(conn);
+
+            bool isAdmin = Session["UserType"] != null && Session["UserType"].ToString() == "admin";
+
+            if (!isAdmin)
+            {
+                SqlCommand publishCheck = new SqlCommand(
+                    "SELECT COUNT(*) FROM Courses WHERE course_id=@cid AND published=1", conn);
+                publishCheck.Parameters.AddWithValue("@cid", courseId);
+
+                if ((int)publishCheck.ExecuteScalar() == 0)
+                {
+                    Response.Redirect("CourseList.aspx");
+                    return;
+                }
+            }
 
             // Check if student is enrolled in this course
             SqlCommand enrollCheck = new SqlCommand(
@@ -57,7 +73,7 @@ public partial class Lesson : Page
             bool isEnrolled = (int)enrollCheck.ExecuteScalar() > 0;
 
             // Admins can view any lesson without enrollment
-            if (!isEnrolled && Session["UserType"].ToString() != "admin")
+            if (!isEnrolled && !isAdmin)
             {
                 pnlNotEnrolled.Visible = true;
                 pnlLesson.Visible = false;
