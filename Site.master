@@ -100,7 +100,7 @@
     </form>
 
     <!-- External JavaScript -->
-    <script type="text/javascript" src="Scripts/scripts.js"></script>
+    <script type="text/javascript" src="Scripts/scripts.js?v=4"></script>
     <asp:ContentPlaceHolder ID="cphScripts" runat="server" />
 </body>
 </html>

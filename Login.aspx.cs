@@ -64,7 +64,7 @@ public partial class Login : Page
                     ShowError("Invalid email or password. Please try again.");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 ShowError("A database error occurred. Please try again later.");
             }

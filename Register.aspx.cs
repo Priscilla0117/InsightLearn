@@ -85,7 +85,7 @@ public partial class Register : Page
                     ShowMessage("Registration failed. Please try again.", false);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 ShowMessage("A database error occurred. Please try again.", false);
             }
