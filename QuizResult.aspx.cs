@@ -1,3 +1,8 @@
+/*
+ * Author:      Chan Kar Jun
+ * Description: Quiz result display page (code-behind)
+ * Date:        23/5/2026
+ */
 using System;
 using System.Collections.Generic;
 using System.Configuration;

@@ -1,3 +1,8 @@
+/*
+ * Author:      Oswald Loh Kar Tzun
+ * Description: Student progress dashboard (code-behind)
+ * Date:        23/5/2026
+ */
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -49,16 +54,24 @@ public partial class StudentDashboard : Page
         using (SqlConnection conn = new SqlConnection(connStr))
         {
             conn.Open();
+            DatabaseHelper.EnsureCoursePublishedColumn(conn);
 
             // Courses enrolled
             SqlCommand cmd1 = new SqlCommand(
-                "SELECT COUNT(*) FROM Enrollment WHERE user_id = @uid", conn);
+                @"SELECT COUNT(*)
+                  FROM Enrollment e
+                  INNER JOIN Courses c ON e.course_id = c.course_id
+                  WHERE e.user_id = @uid AND c.published = 1", conn);
             cmd1.Parameters.AddWithValue("@uid", userId);
             lblCoursesEnrolled.Text = cmd1.ExecuteScalar().ToString();
 
             // Lessons completed
             SqlCommand cmd2 = new SqlCommand(
-                "SELECT COUNT(*) FROM Lesson_Progress WHERE user_id = @uid AND is_completed = 1", conn);
+                @"SELECT COUNT(*)
+                  FROM Lesson_Progress lp
+                  INNER JOIN Lessons l ON lp.lesson_id = l.lesson_id
+                  INNER JOIN Courses c ON l.course_id = c.course_id
+                  WHERE lp.user_id = @uid AND lp.is_completed = 1 AND c.published = 1", conn);
             cmd2.Parameters.AddWithValue("@uid", userId);
             lblLessonsCompleted.Text = cmd2.ExecuteScalar().ToString();
 
@@ -95,6 +108,7 @@ public partial class StudentDashboard : Page
         using (SqlConnection conn = new SqlConnection(connStr))
         {
             conn.Open();
+            DatabaseHelper.EnsureCoursePublishedColumn(conn);
 
             // Get enrolled courses with total lessons and completed lessons counts
             string sql = @"
@@ -115,6 +129,7 @@ public partial class StudentDashboard : Page
                 FROM Courses c
                 INNER JOIN Enrollment e ON c.course_id = e.course_id
                 WHERE e.user_id = @uid
+                AND c.published = 1
                 ORDER BY e.enrolled_date DESC";
 
             SqlCommand cmd = new SqlCommand(sql, conn);
@@ -285,6 +300,7 @@ public partial class StudentDashboard : Page
         using (SqlConnection conn = new SqlConnection(connStr))
         {
             conn.Open();
+            DatabaseHelper.EnsureCoursePublishedColumn(conn);
 
             // Primary: courses the user has NOT enrolled in yet
             string sql = @"
@@ -293,7 +309,8 @@ public partial class StudentDashboard : Page
                     course_name,
                     'New course you haven''t tried yet' AS rec_reason
                 FROM Courses
-                WHERE course_id NOT IN (SELECT course_id FROM Enrollment WHERE user_id = @uid)
+                WHERE published = 1
+                AND course_id NOT IN (SELECT course_id FROM Enrollment WHERE user_id = @uid)
                 ORDER BY NEWID()";
 
             SqlCommand cmd = new SqlCommand(sql, conn);
@@ -314,6 +331,7 @@ public partial class StudentDashboard : Page
                     FROM Courses c
                     INNER JOIN Enrollment e ON c.course_id = e.course_id
                     WHERE e.user_id = @uid
+                    AND c.published = 1
                     AND (SELECT COUNT(*) FROM Lessons l WHERE l.course_id = c.course_id) >
                         (SELECT COUNT(*) FROM Lesson_Progress lp
                          INNER JOIN Lessons l2 ON lp.lesson_id = l2.lesson_id

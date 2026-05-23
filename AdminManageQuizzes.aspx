@@ -1,5 +1,10 @@
 <%@ Page Language="C#" AutoEventWireup="true" CodeFile="AdminManageQuizzes.aspx.cs" Inherits="AdminManageQuizzes"
     MasterPageFile="~/AdminSite.master" Title="Manage Quizzes" %>
+<%--
+    Author:      Chan Kar Jun
+    Description: Quiz management page (ASPX markup)
+    Date:        23/5/2026
+--%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="cphTitle" runat="server">
     Manage Quizzes

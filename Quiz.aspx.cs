@@ -1,3 +1,8 @@
+/*
+ * Author:      Chan Kar Jun
+ * Description: Student quiz-taking page (code-behind)
+ * Date:        23/5/2026
+ */
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -120,18 +125,53 @@ public partial class Quiz : Page
         using (SqlConnection conn = new SqlConnection(connStr))
         {
             conn.Open();
+            DatabaseHelper.EnsureCoursePublishedColumn(conn);
 
             // Get quiz title
-            SqlCommand titleCmd = new SqlCommand(
-                "SELECT quiz_title FROM Quizzes WHERE quiz_id = @qid", conn);
+            SqlCommand titleCmd = new SqlCommand(@"
+                SELECT q.quiz_title, q.course_id, c.published
+                FROM Quizzes q
+                INNER JOIN Courses c ON q.course_id = c.course_id
+                WHERE q.quiz_id = @qid", conn);
             titleCmd.Parameters.AddWithValue("@qid", quizId);
-            object title = titleCmd.ExecuteScalar();
+            SqlDataReader titleReader = titleCmd.ExecuteReader();
 
-            if (title != null)
+            if (!titleReader.Read())
             {
-                litQuizTitle.Text    = Server.HtmlEncode(title.ToString());
-                litHeadingTitle.Text = Server.HtmlEncode(title.ToString());
+                titleReader.Close();
+                Session[SESSION_QUESTIONS] = new List<QuizQuestion>();
+                return;
             }
+
+            string title = titleReader["quiz_title"].ToString();
+            int courseId = Convert.ToInt32(titleReader["course_id"]);
+            bool isPublished = Convert.ToBoolean(titleReader["published"]);
+            titleReader.Close();
+
+            bool isAdmin = Session["UserType"] != null && Session["UserType"].ToString() == "admin";
+
+            if (!isAdmin)
+            {
+                if (!isPublished)
+                {
+                    Response.Redirect("CourseList.aspx");
+                    return;
+                }
+
+                SqlCommand enrollCheck = new SqlCommand(
+                    "SELECT COUNT(*) FROM Enrollment WHERE user_id=@uid AND course_id=@cid", conn);
+                enrollCheck.Parameters.AddWithValue("@uid", int.Parse(Session["UserId"].ToString()));
+                enrollCheck.Parameters.AddWithValue("@cid", courseId);
+
+                if ((int)enrollCheck.ExecuteScalar() == 0)
+                {
+                    Response.Redirect("CourseList.aspx");
+                    return;
+                }
+            }
+
+            litQuizTitle.Text    = Server.HtmlEncode(title);
+            litHeadingTitle.Text = Server.HtmlEncode(title);
 
             // Get all questions for this quiz
             SqlCommand cmd = new SqlCommand(

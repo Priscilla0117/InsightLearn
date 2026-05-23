@@ -1,5 +1,10 @@
 <%@ Page Language="C#" AutoEventWireup="true" CodeFile="AdminDashboard.aspx.cs" Inherits="AdminDashboard"
     MasterPageFile="~/AdminSite.master" Title="Admin Dashboard" %>
+<%--
+    Author:      Oswald Loh Kar Tzun
+    Description: Admin analytics dashboard (ASPX markup)
+    Date:        23/5/2026
+--%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="cphTitle" runat="server">Admin Dashboard</asp:Content>
 

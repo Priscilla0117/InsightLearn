@@ -1,5 +1,10 @@
 <%@ Page Language="C#" AutoEventWireup="true" CodeFile="AdminManageUsers.aspx.cs" Inherits="AdminManageUsers"
     MasterPageFile="~/AdminSite.master" Title="Manage Users" %>
+<%--
+    Author:      Ian Lim
+    Description: User management page (ASPX markup)
+    Date:        23/5/2026
+--%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="cphTitle" runat="server">
     Manage Users
@@ -47,14 +52,14 @@
     <!-- Search + Filter Bar -->
     <div class="action-bar">
         <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-            <asp:TextBox ID="txtSearch" runat="server" CssClass="form-control"
-                placeholder="Search by name or email..." style="width:260px;" />
             <asp:DropDownList ID="ddlRoleFilter" runat="server" CssClass="form-control" style="width:150px;"
                 AutoPostBack="true" OnSelectedIndexChanged="ddlRoleFilter_Changed">
                 <asp:ListItem Value="">All Roles</asp:ListItem>
                 <asp:ListItem Value="student">Student</asp:ListItem>
                 <asp:ListItem Value="admin">Admin</asp:ListItem>
             </asp:DropDownList>
+            <asp:TextBox ID="txtSearch" runat="server" CssClass="form-control"
+                placeholder="Search by name or email..." style="width:260px;" />
             <asp:Button ID="btnSearch" runat="server" Text="Search"
                 OnClick="btnSearch_Click" CssClass="btn btn-primary btn-sm" />
             <asp:Button ID="btnClearSearch" runat="server" Text="Clear"

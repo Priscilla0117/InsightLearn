@@ -1,3 +1,8 @@
+/*
+ * Author:      Chan Kar Jun, Ng Ern Chi, Foo Kim Chean, Ian Lim, Oswald Loh Kar Tzun
+ * Description: InsightLearn Database Schema and Sample Data
+ * Date:        23/5/2026
+ */
 -- ============================================================
 -- InsightLearn Database Setup Script
 -- SQL Server LocalDB (.mdf)
@@ -45,7 +50,8 @@ CREATE TABLE Courses (
     course_name NVARCHAR(200) NOT NULL,
     description NVARCHAR(MAX),
     category    NVARCHAR(100),
-    thumbnail   NVARCHAR(300)
+    thumbnail   NVARCHAR(300),
+    published   BIT NOT NULL DEFAULT(0)
 );
 GO
 
@@ -146,13 +152,13 @@ INSERT INTO Users (name, email, password, role) VALUES
 GO
 
 -- Courses
-INSERT INTO Courses (course_name, description, category, thumbnail) VALUES
-('Introduction to Programming',       'Learn the fundamentals of programming using Python. Covers variables, loops, functions, and more.', 'Programming',      'prog_intro.png'),
-('Web Development Fundamentals',      'Build beautiful, responsive websites using HTML, CSS, and JavaScript from scratch.',                'Web Development',  'webdev.png'),
-('Data Structures & Algorithms',      'Deep dive into sorting algorithms, trees, graphs, and problem-solving techniques.',                 'Computer Science', 'dsa.png'),
-('Calculus Fundamentals',             'Master derivatives, integrals, and limits with step-by-step guidance for STEM students.',           'Mathematics',      'calculus.png'),
-('Data Analysis with Python',         'Analyze and visualize data using Python libraries like Pandas, Matplotlib and NumPy.',              'Data Science',     'dataanalysis.png'),
-('UI/UX Design Principles',           'Create user-friendly interfaces with proven design principles, Figma workflows, and prototyping.', 'Design',           'uiux.png');
+INSERT INTO Courses (course_name, description, category, thumbnail, published) VALUES
+('Introduction to Programming',       'Learn the fundamentals of programming using Python. Covers variables, loops, functions, and more.', 'Programming',      'prog_intro.png',     1),
+('Web Development Fundamentals',      'Build beautiful, responsive websites using HTML, CSS, and JavaScript from scratch.',                'Web Development',  'webdev.png',         1),
+('Data Structures & Algorithms',      'Deep dive into sorting algorithms, trees, graphs, and problem-solving techniques.',                 'Computer Science', 'dsa.png',            1),
+('Calculus Fundamentals',             'Master derivatives, integrals, and limits with step-by-step guidance for STEM students.',           'Mathematics',      'calculus.png',       1),
+('Data Analysis with Python',         'Analyze and visualize data using Python libraries like Pandas, Matplotlib and NumPy.',              'Data Science',     'dataanalysis.png',   1),
+('UI/UX Design Principles',           'Create user-friendly interfaces with proven design principles, Figma workflows, and prototyping.', 'Design',           'uiux.png',           1);
 GO
 
 -- Lessons for Course 1 (Introduction to Programming)

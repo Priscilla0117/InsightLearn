@@ -1,3 +1,8 @@
+/*
+ * Author:      Foo Kim Chean
+ * Description: Course completion certificate page (code-behind)
+ * Date:        23/5/2026
+ */
 using System;
 using System.Configuration;
 using System.Data;

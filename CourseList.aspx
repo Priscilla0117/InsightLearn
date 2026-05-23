@@ -1,5 +1,10 @@
 <%@ Page Language="C#" AutoEventWireup="true" CodeFile="CourseList.aspx.cs" Inherits="CourseList"
     MasterPageFile="~/Site.master" Title="All Courses" %>
+<%--
+    Author:      Ng Ern Chi
+    Description: Student course listing page (ASPX markup)
+    Date:        23/5/2026
+--%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="cphTitle" runat="server">All Courses</asp:Content>
 

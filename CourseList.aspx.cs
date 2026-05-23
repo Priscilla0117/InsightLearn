@@ -1,3 +1,8 @@
+/*
+ * Author:      Ng Ern Chi
+ * Description: Student course listing page (code-behind)
+ * Date:        23/5/2026
+ */
 using System;
 using System.Configuration;
 using System.Data;
@@ -37,9 +42,10 @@ public partial class CourseList : Page
         using (SqlConnection conn = new SqlConnection(connStr))
         {
             conn.Open();
+            DatabaseHelper.EnsureCoursePublishedColumn(conn);
 
             // Build dynamic SQL with parameterized search
-            string whereClause = " WHERE 1=1 ";
+            string whereClause = " WHERE c.published = 1 ";
             if (!string.IsNullOrEmpty(search))
                 whereClause += " AND (c.course_name LIKE @search OR c.description LIKE @search OR c.category LIKE @search) ";
             if (!string.IsNullOrEmpty(category))
@@ -188,6 +194,17 @@ public partial class CourseList : Page
         using (SqlConnection conn = new SqlConnection(connStr))
         {
             conn.Open();
+            DatabaseHelper.EnsureCoursePublishedColumn(conn);
+
+            SqlCommand publishCheckCmd = new SqlCommand(
+                "SELECT COUNT(*) FROM Courses WHERE course_id=@cid AND published=1", conn);
+            publishCheckCmd.Parameters.AddWithValue("@cid", courseId);
+
+            if ((int)publishCheckCmd.ExecuteScalar() == 0)
+            {
+                ShowMessage("This course is not available for enrollment yet.", false);
+                return;
+            }
 
             // Check if already enrolled
             SqlCommand checkCmd = new SqlCommand(
@@ -212,6 +229,13 @@ public partial class CourseList : Page
 
         // Redirect directly to the lesson page after successful enrollment
         Response.Redirect("Lesson.aspx?courseId=" + courseId);
+    }
+
+    private void ShowMessage(string msg, bool success)
+    {
+        lblMessage.Text = msg;
+        lblMessage.CssClass = success ? "alert alert-success" : "alert alert-danger";
+        lblMessage.Visible = true;
     }
 
     // Returns correct action button HTML based on enrollment and login state

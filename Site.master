@@ -1,4 +1,9 @@
 <%@ Master Language="C#" AutoEventWireup="true" CodeFile="Site.master.cs" Inherits="Site" %>
+<%--
+    Author:      Ian Lim
+    Description: Student-facing master page layout
+    Date:        23/5/2026
+--%>
 <!DOCTYPE html>
 <html lang="en">
 <head runat="server">

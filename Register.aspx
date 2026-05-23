@@ -1,5 +1,10 @@
 <%@ Page Language="C#" AutoEventWireup="true" CodeFile="Register.aspx.cs" Inherits="Register"
     MasterPageFile="~/Site.master" Title="Register" %>
+<%--
+    Author:      Ian Lim
+    Description: User registration page (ASPX markup)
+    Date:        23/5/2026
+--%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="cphTitle" runat="server">Create Account</asp:Content>
 

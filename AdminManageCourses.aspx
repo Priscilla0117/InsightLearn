@@ -1,5 +1,10 @@
 <%@ Page Language="C#" AutoEventWireup="true" CodeFile="AdminManageCourses.aspx.cs" Inherits="AdminManageCourses"
     MasterPageFile="~/AdminSite.master" Title="Manage Courses" %>
+<%--
+    Author:      Ng Ern Chi
+    Description: Course management page (ASPX markup)
+    Date:        23/5/2026
+--%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="cphTitle" runat="server">
     Manage Courses
@@ -47,8 +52,6 @@
     <!-- Search + Add Bar -->
     <div class="action-bar">
         <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-            <asp:TextBox ID="txtSearch" runat="server" CssClass="form-control"
-                placeholder="Search courses..." style="width:260px;" />
             <asp:DropDownList ID="ddlCategoryFilter" runat="server" CssClass="form-control" style="width:180px;"
                 AutoPostBack="true" OnSelectedIndexChanged="ddlCategoryFilter_Changed">
                 <asp:ListItem Value="">All Categories</asp:ListItem>
@@ -59,6 +62,8 @@
                 <asp:ListItem Value="Data Science">Data Science</asp:ListItem>
                 <asp:ListItem Value="Design">Design</asp:ListItem>
             </asp:DropDownList>
+            <asp:TextBox ID="txtSearch" runat="server" CssClass="form-control"
+                placeholder="Search courses..." style="width:260px;" />
             <asp:Button ID="btnSearch" runat="server" Text="Search"
                 OnClick="btnSearch_Click" CssClass="btn btn-primary btn-sm" />
             <asp:Button ID="btnClear" runat="server" Text="Clear"
@@ -181,9 +186,22 @@
                 <asp:BoundField DataField="lesson_count" HeaderText="Lessons"  ItemStyle-Width="80px" />
                 <asp:BoundField DataField="quiz_count"   HeaderText="Quizzes"  ItemStyle-Width="80px" />
                 <asp:BoundField DataField="enrolled"     HeaderText="Enrolled" ItemStyle-Width="80px" />
-                <asp:TemplateField HeaderText="Actions" ItemStyle-Width="150px">
+                <asp:TemplateField HeaderText="Status" ItemStyle-Width="110px">
+                    <ItemTemplate>
+                        <span class='badge <%# Convert.ToBoolean(Eval("published")) ? "badge-success" : "badge-gray" %>'>
+                            <%# Convert.ToBoolean(Eval("published")) ? "Published" : "Unpublished" %>
+                        </span>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Actions" ItemStyle-Width="240px">
                     <ItemTemplate>
                         <div class="table-actions">
+                            <asp:LinkButton ID="lbTogglePublish" runat="server"
+                                CommandName="TogglePublish"
+                                CommandArgument='<%# Eval("course_id") %>'
+                                Text='<%# Convert.ToBoolean(Eval("published")) ? "Unpublish" : "Publish" %>'
+                                CssClass='<%# Convert.ToBoolean(Eval("published")) ? "btn btn-outline btn-sm" : "btn btn-success btn-sm" %>'
+                                OnClientClick="return confirm('Change publish status for this course?');" />
                             <asp:LinkButton ID="lbEdit" runat="server"
                                 CommandName="EditCourse"
                                 CommandArgument='<%# Eval("course_id") %>'

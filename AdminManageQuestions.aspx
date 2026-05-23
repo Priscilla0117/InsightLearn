@@ -1,5 +1,10 @@
 <%@ Page Language="C#" AutoEventWireup="true" CodeFile="AdminManageQuestions.aspx.cs" Inherits="AdminManageQuestions"
     MasterPageFile="~/AdminSite.master" Title="Manage Questions" %>
+<%--
+    Author:      Oswald Loh Kar Tzun
+    Description: Question bank management page (ASPX markup)
+    Date:        23/5/2026
+--%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="cphTitle" runat="server">
     Manage Questions

@@ -1,5 +1,10 @@
 <%@ Page Language="C#" AutoEventWireup="true" CodeFile="Quiz.aspx.cs" Inherits="Quiz"
     MasterPageFile="~/Site.master" Title="Quiz" %>
+<%--
+    Author:      Chan Kar Jun
+    Description: Student quiz-taking page (ASPX markup)
+    Date:        23/5/2026
+--%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="cphTitle" runat="server">
     <asp:Literal ID="litQuizTitle" runat="server">Quiz</asp:Literal>
