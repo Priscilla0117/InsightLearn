@@ -41,12 +41,27 @@ public partial class Quiz : Page
             return;
         }
 
+        // Students only — admins have no business taking quizzes
+        if (Session["UserType"] != null && Session["UserType"].ToString() == "admin")
+        {
+            Response.Redirect("AdminDashboard.aspx");
+            return;
+        }
+
         if (!IsPostBack)
         {
             int quizId = 0;
             int.TryParse(Request.QueryString["quizId"], out quizId);
 
             if (quizId <= 0)
+            {
+                Response.Redirect("CourseList.aspx");
+                return;
+            }
+
+            // Enrollment check — student must be enrolled in this quiz's course
+            int userId = int.Parse(Session["UserId"].ToString());
+            if (!IsEnrolledInQuizCourse(quizId, userId))
             {
                 Response.Redirect("CourseList.aspx");
                 return;
@@ -78,6 +93,23 @@ public partial class Quiz : Page
         if (currentQ >= questions.Count) currentQ = questions.Count - 1;
 
         DisplayCurrentQuestion();
+    }
+
+    // Verify the student is enrolled in the course that owns this quiz
+    private bool IsEnrolledInQuizCourse(int quizId, int userId)
+    {
+        string connStr = ConfigurationManager.ConnectionStrings["InsightLearnDB"].ConnectionString;
+        using (SqlConnection conn = new SqlConnection(connStr))
+        {
+            conn.Open();
+            SqlCommand cmd = new SqlCommand(
+                @"SELECT COUNT(*) FROM Enrollment e
+                  INNER JOIN Quizzes q ON q.course_id = e.course_id
+                  WHERE q.quiz_id = @qid AND e.user_id = @uid", conn);
+            cmd.Parameters.AddWithValue("@qid", quizId);
+            cmd.Parameters.AddWithValue("@uid", userId);
+            return (int)cmd.ExecuteScalar() > 0;
+        }
     }
 
     // Load all questions from database and store in session

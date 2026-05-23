@@ -175,44 +175,69 @@ function renderBarChart(canvasId, labels, values, maxValue) {
     var container = document.getElementById(canvasId);
     if (!container) return;
 
-    var width = container.offsetWidth || 480;
-    var height = 180;
+    var width    = container.offsetWidth || 480;
+    var height   = 210;
+    var padL     = 42;   // left  — y-axis labels
+    var padR     = 12;   // right
+    var padT     = 28;   // top   — score label above tallest bar
+    var padB     = 48;   // bottom — date labels
+    var chartW   = width - padL - padR;
+    var chartH   = height - padT - padB;
     var barCount = labels.length;
-    var barWidth = Math.floor((width - 60) / barCount) - 10;
-    var chartMax = maxValue || Math.max.apply(null, values) * 1.2 || 100;
+    var slotW    = chartW / barCount;
+    var barW     = Math.max(12, Math.floor(slotW * 0.55));
+    var chartMax = maxValue || (Math.max.apply(null, values) * 1.2) || 100;
+    var baseY    = padT + chartH;   // y coordinate of the x-axis
 
-    var svgParts = ['<svg width="100%" height="' + height + '" xmlns="http://www.w3.org/2000/svg">'];
+    var svg = ['<svg width="100%" height="' + height + '" xmlns="http://www.w3.org/2000/svg">'];
 
-    // Y axis line
-    svgParts.push('<line x1="40" y1="10" x2="40" y2="' + (height - 30) + '" stroke="#E2E8F0" stroke-width="1"/>');
-
-    // Bars
-    values.forEach(function (val, i) {
-        var barHeight = Math.floor(((val / chartMax) * (height - 50)));
-        var x = 50 + i * (barWidth + 10);
-        var y = height - 30 - barHeight;
-        var color = '#7C3AED';
-        var opacity = 0.7 + (i / values.length) * 0.3;
-
-        svgParts.push('<rect x="' + x + '" y="' + y + '" width="' + barWidth + '" height="' + barHeight +
-            '" rx="3" fill="' + color + '" opacity="' + opacity + '"/>');
-
-        // Value label
-        svgParts.push('<text x="' + (x + barWidth / 2) + '" y="' + (y - 4) +
-            '" text-anchor="middle" font-size="10" fill="#64748B">' + val + '</text>');
-
-        // X axis label
-        var labelY = height - 10;
-        var labelText = labels[i] ? labels[i].substring(0, 4) : '';
-        svgParts.push('<text x="' + (x + barWidth / 2) + '" y="' + labelY +
-            '" text-anchor="middle" font-size="10" fill="#94A3B8">' + labelText + '</text>');
+    // Horizontal grid lines + Y-axis percentage labels at 0, 50, 100
+    [0, 50, 100].forEach(function (pct) {
+        var gy = baseY - Math.round((pct / chartMax) * chartH);
+        svg.push('<line x1="' + padL + '" y1="' + gy + '" x2="' + (width - padR) + '" y2="' + gy +
+                 '" stroke="#F1F5F9" stroke-width="1"/>');
+        svg.push('<text x="' + (padL - 6) + '" y="' + (gy + 4) +
+                 '" text-anchor="end" font-size="9" fill="#94A3B8">' + pct + '</text>');
     });
 
-    // X axis line
-    svgParts.push('<line x1="40" y1="' + (height - 30) + '" x2="' + width + '" y2="' + (height - 30) + '" stroke="#E2E8F0" stroke-width="1"/>');
+    // Y-axis line
+    svg.push('<line x1="' + padL + '" y1="' + padT + '" x2="' + padL + '" y2="' + baseY +
+             '" stroke="#E2E8F0" stroke-width="1"/>');
+    // X-axis line
+    svg.push('<line x1="' + padL + '" y1="' + baseY + '" x2="' + (width - padR) + '" y2="' + baseY +
+             '" stroke="#E2E8F0" stroke-width="1"/>');
 
-    svgParts.push('</svg>');
-    container.innerHTML = svgParts.join('');
+    // Bars, score labels, date labels
+    values.forEach(function (val, i) {
+        var cx   = padL + i * slotW + slotW / 2;            // horizontal centre of this bar slot
+        var bx   = Math.round(cx - barW / 2);               // bar left edge
+        var hasScore = val > 0;
+        var barH     = hasScore
+                         ? Math.max(4, Math.round((val / chartMax) * chartH))
+                         : Math.round(chartH * 0.08);       // empty-day placeholder bar
+        var by       = baseY - barH;                        // bar top edge
+        var barColor = hasScore ? '#7C3AED' : '#CBD5E1';    // purple if scored, gray if no quiz
+        var barOp    = hasScore ? '0.85'    : '0.5';
+
+        // Bar
+        svg.push('<rect x="' + bx + '" y="' + by + '" width="' + barW + '" height="' + barH +
+                 '" rx="4" fill="' + barColor + '" opacity="' + barOp + '"/>');
+
+        // Score label above bar — only for days that have a quiz result
+        if (hasScore && by > padT + 14) {
+            svg.push('<text x="' + cx + '" y="' + (by - 6) +
+                     '" text-anchor="middle" font-size="10" font-weight="600" fill="#475569">' +
+                     val + '%</text>');
+        }
+
+        // Full date label below x-axis
+        svg.push('<text x="' + cx + '" y="' + (baseY + 16) +
+                 '" text-anchor="middle" font-size="10" fill="#94A3B8">' +
+                 (labels[i] || '') + '</text>');
+    });
+
+    svg.push('</svg>');
+    container.innerHTML = svg.join('');
 }
 
 // -- Form validation helpers --

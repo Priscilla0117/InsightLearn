@@ -157,7 +157,8 @@ public partial class StudentDashboard : Page
         {
             conn.Open();
 
-            string sql = @"
+            // --- GridView: 5 most recent individual attempts (newest first) ---
+            string gridSql = @"
                 SELECT TOP 5
                     c.course_name,
                     q.quiz_title,
@@ -169,22 +170,50 @@ public partial class StudentDashboard : Page
                 WHERE qa.user_id = @uid
                 ORDER BY qa.attempt_date DESC";
 
-            SqlCommand cmd = new SqlCommand(sql, conn);
-            cmd.Parameters.AddWithValue("@uid", userId);
+            SqlCommand gridCmd = new SqlCommand(gridSql, conn);
+            gridCmd.Parameters.AddWithValue("@uid", userId);
 
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            SqlDataAdapter da = new SqlDataAdapter(gridCmd);
             DataTable dt = new DataTable();
             da.Fill(dt);
 
             gvQuizResults.DataSource = dt;
             gvQuizResults.DataBind();
 
-            // Build chart data from quiz results
-            foreach (DataRow row in dt.Rows)
+            // --- Chart: last 5 calendar days, one bar per day ---
+            // Every day in the window is always shown.
+            // Days with no quiz attempt get a value of 0 (displayed as an empty bar).
+            DateTime today = DateTime.Today;
+
+            string chartSql = @"
+                SELECT
+                    CAST(attempt_date AS DATE)          AS attempt_day,
+                    ROUND(AVG(CAST(score AS FLOAT)), 0) AS avg_score
+                FROM Quiz_Attempts
+                WHERE user_id = @uid
+                  AND attempt_date >= @startDate
+                GROUP BY CAST(attempt_date AS DATE)";
+
+            SqlCommand chartCmd = new SqlCommand(chartSql, conn);
+            chartCmd.Parameters.AddWithValue("@uid",       userId);
+            chartCmd.Parameters.AddWithValue("@startDate", today.AddDays(-4));
+
+            // Read DB results into a dictionary keyed by calendar date
+            var scoreByDay = new Dictionary<DateTime, int>();
+            SqlDataReader chartReader = chartCmd.ExecuteReader();
+            while (chartReader.Read())
             {
-                chartLabels.Add(row["attempt_date"] is DBNull ? "" :
-                    Convert.ToDateTime(row["attempt_date"]).ToString("MM/dd"));
-                chartValues.Add(Convert.ToInt32(row["score"]));
+                DateTime day = Convert.ToDateTime(chartReader["attempt_day"]);
+                scoreByDay[day] = Convert.ToInt32(chartReader["avg_score"]);
+            }
+            chartReader.Close();
+
+            // Always emit exactly 5 bars: 4 days ago → today (oldest left, newest right)
+            for (int d = 4; d >= 0; d--)
+            {
+                DateTime day = today.AddDays(-d);
+                chartLabels.Add(day.ToString("dd MMM"));
+                chartValues.Add(scoreByDay.ContainsKey(day) ? scoreByDay[day] : 0);
             }
         }
     }

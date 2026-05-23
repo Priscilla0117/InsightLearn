@@ -85,9 +85,9 @@
                 </div>
                 <div class="course-card-body">
                     <span class='course-tag <%# GetTagClass(Eval("category").ToString()) %>'>
-                        <%# Eval("category") %>
+                        <%# Server.HtmlEncode(Eval("category").ToString()) %>
                     </span>
-                    <h3><%# Eval("course_name") %></h3>
+                    <h3><%# Server.HtmlEncode(Eval("course_name").ToString()) %></h3>
                     <p><%# Server.HtmlEncode(Eval("description").ToString().Length > 100
                             ? Eval("description").ToString().Substring(0, 100) + "..."
                             : Eval("description").ToString()) %></p>

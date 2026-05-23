@@ -64,9 +64,9 @@
                 <div class="course-progress-item">
                     <div class="cpi-top">
                         <div>
-                            <div class="cpi-title"><%# Eval("course_name") %></div>
+                            <div class="cpi-title"><%# Server.HtmlEncode(Eval("course_name").ToString()) %></div>
                             <div class="cpi-next">
-                                <%# Eval("next_lesson") != null && Eval("next_lesson").ToString() != "" ? "Next: " + Eval("next_lesson") : "All lessons completed!" %>
+                                <%# Eval("next_lesson") != null && Eval("next_lesson").ToString() != "" ? "Next: " + Server.HtmlEncode(Eval("next_lesson").ToString()) : "All lessons completed!" %>
                             </div>
                         </div>
                         <asp:LinkButton ID="btnContinue" runat="server"
