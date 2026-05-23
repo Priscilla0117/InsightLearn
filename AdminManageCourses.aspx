@@ -47,8 +47,6 @@
     <!-- Search + Add Bar -->
     <div class="action-bar">
         <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-            <asp:TextBox ID="txtSearch" runat="server" CssClass="form-control"
-                placeholder="Search courses..." style="width:260px;" />
             <asp:DropDownList ID="ddlCategoryFilter" runat="server" CssClass="form-control" style="width:180px;"
                 AutoPostBack="true" OnSelectedIndexChanged="ddlCategoryFilter_Changed">
                 <asp:ListItem Value="">All Categories</asp:ListItem>
@@ -59,6 +57,8 @@
                 <asp:ListItem Value="Data Science">Data Science</asp:ListItem>
                 <asp:ListItem Value="Design">Design</asp:ListItem>
             </asp:DropDownList>
+            <asp:TextBox ID="txtSearch" runat="server" CssClass="form-control"
+                placeholder="Search courses..." style="width:260px;" />
             <asp:Button ID="btnSearch" runat="server" Text="Search"
                 OnClick="btnSearch_Click" CssClass="btn btn-primary btn-sm" />
             <asp:Button ID="btnClear" runat="server" Text="Clear"

@@ -13,7 +13,7 @@ public partial class AdminSite : MasterPage
         }
 
         // Show admin user name
-        lblAdminName.Text = "&#128100; " + Session["UserName"].ToString();
+        lblAdminName.Text = "&#128100; " + Server.HtmlEncode(Session["UserName"].ToString());
 
         // Highlight active admin nav link
         string currentPage = System.IO.Path.GetFileName(Request.Path).ToLower();
