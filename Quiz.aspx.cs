@@ -125,7 +125,6 @@ public partial class Quiz : Page
         using (SqlConnection conn = new SqlConnection(connStr))
         {
             conn.Open();
-            DatabaseHelper.EnsureCoursePublishedColumn(conn);
 
             // Get quiz title
             SqlCommand titleCmd = new SqlCommand(@"

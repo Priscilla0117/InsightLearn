@@ -42,7 +42,6 @@ public partial class CourseList : Page
         using (SqlConnection conn = new SqlConnection(connStr))
         {
             conn.Open();
-            DatabaseHelper.EnsureCoursePublishedColumn(conn);
 
             // Build dynamic SQL with parameterized search
             string whereClause = " WHERE c.published = 1 ";
@@ -194,7 +193,6 @@ public partial class CourseList : Page
         using (SqlConnection conn = new SqlConnection(connStr))
         {
             conn.Open();
-            DatabaseHelper.EnsureCoursePublishedColumn(conn);
 
             SqlCommand publishCheckCmd = new SqlCommand(
                 "SELECT COUNT(*) FROM Courses WHERE course_id=@cid AND published=1", conn);

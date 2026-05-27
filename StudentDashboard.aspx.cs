@@ -54,7 +54,6 @@ public partial class StudentDashboard : Page
         using (SqlConnection conn = new SqlConnection(connStr))
         {
             conn.Open();
-            DatabaseHelper.EnsureCoursePublishedColumn(conn);
 
             // Courses enrolled
             SqlCommand cmd1 = new SqlCommand(
@@ -108,7 +107,6 @@ public partial class StudentDashboard : Page
         using (SqlConnection conn = new SqlConnection(connStr))
         {
             conn.Open();
-            DatabaseHelper.EnsureCoursePublishedColumn(conn);
 
             // Get enrolled courses with total lessons and completed lessons counts
             string sql = @"
@@ -300,7 +298,6 @@ public partial class StudentDashboard : Page
         using (SqlConnection conn = new SqlConnection(connStr))
         {
             conn.Open();
-            DatabaseHelper.EnsureCoursePublishedColumn(conn);
 
             // Primary: courses the user has NOT enrolled in yet
             string sql = @"

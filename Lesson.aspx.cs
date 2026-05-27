@@ -52,7 +52,6 @@ public partial class Lesson : Page
         using (SqlConnection conn = new SqlConnection(connStr))
         {
             conn.Open();
-            DatabaseHelper.EnsureCoursePublishedColumn(conn);
 
             bool isAdmin = Session["UserType"] != null && Session["UserType"].ToString() == "admin";
 
