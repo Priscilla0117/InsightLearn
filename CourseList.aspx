@@ -26,13 +26,13 @@
         <p>Discover our wide range of courses designed to help you grow.</p>
     </div>
 
-    <!-- Message (enroll feedback etc.) -->
+    <%-- feedback label: shown after enroll actions; EnableViewState="false" clears it on next load --%>
     <asp:Label ID="lblMessage" runat="server" Visible="false" EnableViewState="false" />
 
     <!-- ===== FILTER & SEARCH BAR ===== -->
     <div class="filter-bar">
 
-        <!-- Search -->
+        <!-- Search box: user must click the Search button, not auto-postback -->
         <div class="filter-group filter-search">
             <label>Search</label>
             <asp:TextBox ID="txtSearch" runat="server"
@@ -41,7 +41,7 @@
                 AutoPostBack="false" />
         </div>
 
-        <!-- Category filter -->
+        <%-- AutoPostBack="true": page reloads and re-filters as soon as user picks a category --%>
         <div class="filter-group">
             <label>Category</label>
             <asp:DropDownList ID="ddlCategory" runat="server"
@@ -58,7 +58,7 @@
             </asp:DropDownList>
         </div>
 
-        <!-- Sort -->
+        <%-- AutoPostBack="true": re-queries with a different ORDER BY when sort changes --%>
         <div class="filter-group">
             <label>Sort By</label>
             <asp:DropDownList ID="ddlSort" runat="server"
@@ -71,7 +71,6 @@
             </asp:DropDownList>
         </div>
 
-        <!-- Search button -->
         <asp:Button ID="btnSearch" runat="server"
             Text="Search"
             OnClick="btnSearch_Click"
@@ -79,20 +78,24 @@
     </div>
 
     <!-- ===== COURSE CARDS GRID ===== -->
+    <%-- Repeater used instead of GridView so we can design our own card layout in HTML --%>
     <asp:Repeater ID="rptCourses" runat="server">
         <HeaderTemplate>
             <div class="courses-grid">
         </HeaderTemplate>
         <ItemTemplate>
             <div class="course-card">
+                <%-- Eval() reads the field value from the current data row --%>
                 <div class='course-thumbnail <%# GetThumbClass(Eval("category").ToString()) %>'>
                     <span><%# GetCatIcon(Eval("category").ToString()) %></span>
                 </div>
                 <div class="course-card-body">
                     <span class='course-tag <%# GetTagClass(Eval("category").ToString()) %>'>
+                        <%-- Server.HtmlEncode prevents XSS by escaping special characters --%>
                         <%# Server.HtmlEncode(Eval("category").ToString()) %>
                     </span>
                     <h3><%# Server.HtmlEncode(Eval("course_name").ToString()) %></h3>
+                    <%-- truncate description to 100 characters so all cards stay the same height --%>
                     <p><%# Server.HtmlEncode(Eval("description").ToString().Length > 100
                             ? Eval("description").ToString().Substring(0, 100) + "..."
                             : Eval("description").ToString()) %></p>
@@ -102,7 +105,7 @@
                     </div>
                 </div>
                 <div class="course-card-footer">
-                    <!-- Enroll or Continue button based on enrollment status -->
+                    <%-- GetActionButton() returns different HTML based on login/enrollment state --%>
                     <%# GetActionButton(Eval("course_id"), Eval("is_enrolled")) %>
                 </div>
             </div>
@@ -112,7 +115,7 @@
         </FooterTemplate>
     </asp:Repeater>
 
-    <!-- No results message -->
+    <!-- shown by code-behind when the query returns 0 rows -->
     <asp:Panel ID="pnlNoResults" runat="server" Visible="false">
         <div class="empty-state">
             <div class="empty-icon">&#128214;</div>
@@ -129,8 +132,10 @@
                 OnClick="btnPrev_Click"
                 CssClass="page-btn" />
 
+            <%-- rptPages is bound to a list of page numbers in BuildPagination() --%>
             <asp:Repeater ID="rptPages" runat="server">
                 <ItemTemplate>
+                    <%-- active page gets "page-btn active" class, others get "page-btn" --%>
                     <asp:LinkButton ID="lbPage" runat="server"
                         Text='<%# Eval("PageNum") %>'
                         CommandArgument='<%# Eval("PageNum") %>'
@@ -146,7 +151,7 @@
         </div>
     </asp:Panel>
 
-    <!-- Enroll hidden form (for POST action) -->
+    <%-- hidden field stores the course_id; hidden button triggers the enroll postback via JavaScript --%>
     <asp:HiddenField ID="hdnEnrollCourseId" runat="server" />
     <asp:Button ID="btnEnroll" runat="server" Style="display:none;"
         OnClick="btnEnroll_Click" />
