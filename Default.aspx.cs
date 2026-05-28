@@ -10,6 +10,6 @@ public partial class Default : Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        // Home page — no dynamic content loading needed
+        // home page is all static HTML, no database needed
     }
 }

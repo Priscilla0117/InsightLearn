@@ -12,21 +12,21 @@ using System.Web.UI.WebControls;
 
 public partial class CourseList : Page
 {
-    private const int PageSize = 6;  // courses per page
+    private const int PageSize = 6;  // number of courses shown per page
     public int CurrentPage { get; private set; }
     private int totalPages = 1;
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!IsPostBack)
+        if (!IsPostBack) // only runs on first page load
         {
             CurrentPage = 1;
-            ViewState["CurrentPage"] = 1;
+            ViewState["CurrentPage"] = 1; // save page number so postbacks can read it back
             LoadCourses();
         }
         else
         {
-            CurrentPage = ViewState["CurrentPage"] != null ? (int)ViewState["CurrentPage"] : 1;
+            CurrentPage = ViewState["CurrentPage"] != null ? (int)ViewState["CurrentPage"] : 1; // restore page number on postback
         }
     }
 
@@ -35,7 +35,7 @@ public partial class CourseList : Page
         string search   = txtSearch.Text.Trim();
         string category = ddlCategory.SelectedValue;
         string sort     = ddlSort.SelectedValue;
-        int    userId   = Session["UserId"] != null ? int.Parse(Session["UserId"].ToString()) : 0;
+        int    userId   = Session["UserId"] != null ? int.Parse(Session["UserId"].ToString()) : 0; // 0 means guest (not logged in)
 
         string connStr = ConfigurationManager.ConnectionStrings["InsightLearnDB"].ConnectionString;
 
@@ -43,31 +43,31 @@ public partial class CourseList : Page
         {
             conn.Open();
 
-            // Build dynamic SQL with parameterized search
-            string whereClause = " WHERE c.published = 1 ";
+            string whereClause = " WHERE c.published = 1 "; // only show courses the admin has published
             if (!string.IsNullOrEmpty(search))
                 whereClause += " AND (c.course_name LIKE @search OR c.description LIKE @search OR c.category LIKE @search) ";
             if (!string.IsNullOrEmpty(category))
                 whereClause += " AND c.category = @category ";
 
+            // map dropdown value to ORDER BY clause
             string orderClause = sort == "name_desc" ? " ORDER BY c.course_name DESC " :
                                  sort == "newest"    ? " ORDER BY c.course_id DESC " :
                                                        " ORDER BY c.course_name ASC ";
 
-            // Count total records for pagination
+            // first query: count total matching rows to calculate total pages
             string countSql = "SELECT COUNT(*) FROM Courses c" + whereClause;
             SqlCommand countCmd = new SqlCommand(countSql, conn);
             if (!string.IsNullOrEmpty(search))   countCmd.Parameters.AddWithValue("@search",   "%" + search + "%");
             if (!string.IsNullOrEmpty(category)) countCmd.Parameters.AddWithValue("@category", category);
 
             int totalRecords = (int)countCmd.ExecuteScalar();
-            totalPages = Math.Max(1, (int)Math.Ceiling((double)totalRecords / PageSize));
+            totalPages = Math.Max(1, (int)Math.Ceiling((double)totalRecords / PageSize)); // ceiling division e.g. 13 ÷ 6 = 3 pages
 
-            // Clamp current page
-            if (CurrentPage > totalPages) CurrentPage = totalPages;
-            int offset = (CurrentPage - 1) * PageSize;
+            if (CurrentPage > totalPages) CurrentPage = totalPages; // clamp page if filters reduce results
 
-            // Fetch page of courses
+            int offset = (CurrentPage - 1) * PageSize; // how many rows to skip
+
+            // second query: fetch only the current page's rows using OFFSET/FETCH
             string sql = @"
                 SELECT
                     c.course_id,
@@ -76,11 +76,11 @@ public partial class CourseList : Page
                     c.category,
                     (SELECT COUNT(*) FROM Lessons l WHERE l.course_id = c.course_id) AS lesson_count,
                     (SELECT COUNT(*) FROM Quizzes q WHERE q.course_id = c.course_id) AS quiz_count,
-                    CASE WHEN e.enrollment_id IS NOT NULL THEN 1 ELSE 0 END AS is_enrolled
+                    CASE WHEN e.enrollment_id IS NOT NULL THEN 1 ELSE 0 END AS is_enrolled -- 1 if student is enrolled, 0 if not
                 FROM Courses c
-                LEFT JOIN Enrollment e ON c.course_id = e.course_id AND e.user_id = @userId
+                LEFT JOIN Enrollment e ON c.course_id = e.course_id AND e.user_id = @userId -- LEFT JOIN keeps all courses even if not enrolled
                 " + whereClause + orderClause +
-                " OFFSET @offset ROWS FETCH NEXT @pageSize ROWS ONLY";
+                " OFFSET @offset ROWS FETCH NEXT @pageSize ROWS ONLY"; // returns only the current page rows
 
             SqlCommand cmd = new SqlCommand(sql, conn);
             cmd.Parameters.AddWithValue("@userId",   userId);
@@ -103,14 +103,14 @@ public partial class CourseList : Page
             else
             {
                 rptCourses.Visible   = false;
-                pnlNoResults.Visible = true;
+                pnlNoResults.Visible = true; // show "no courses found" message
             }
 
             BuildPagination(totalPages);
         }
     }
 
-    // Build pagination number buttons
+    // builds the row of numbered page buttons; hides pagination if only one page
     private void BuildPagination(int total)
     {
         if (total <= 1)
@@ -120,12 +120,12 @@ public partial class CourseList : Page
         }
 
         pnlPagination.Visible = true;
-        btnPrev.Enabled = CurrentPage > 1;
-        btnNext.Enabled = CurrentPage < total;
+        btnPrev.Enabled = CurrentPage > 1;     // disable Prev on first page
+        btnNext.Enabled = CurrentPage < total; // disable Next on last page
 
         var pages = new System.Collections.Generic.List<object>();
         for (int i = 1; i <= total; i++)
-            pages.Add(new { PageNum = i });
+            pages.Add(new { PageNum = i }); // anonymous object so Eval("PageNum") works in the Repeater
 
         rptPages.DataSource = pages;
         rptPages.DataBind();
@@ -134,20 +134,20 @@ public partial class CourseList : Page
     protected void btnSearch_Click(object sender, EventArgs e)
     {
         CurrentPage = 1;
-        ViewState["CurrentPage"] = 1;
+        ViewState["CurrentPage"] = 1; // reset to page 1 on new search
         LoadCourses();
     }
 
     protected void ddlCategory_SelectedIndexChanged(object sender, EventArgs e)
     {
         CurrentPage = 1;
-        ViewState["CurrentPage"] = 1;
+        ViewState["CurrentPage"] = 1; // reset to page 1 when filter changes
         LoadCourses();
     }
 
     protected void ddlSort_SelectedIndexChanged(object sender, EventArgs e)
     {
-        LoadCourses();
+        LoadCourses(); // keep current page, just re-order
     }
 
     protected void btnPrev_Click(object sender, EventArgs e)
@@ -169,15 +169,14 @@ public partial class CourseList : Page
 
     protected void lbPage_Command(object sender, CommandEventArgs e)
     {
-        CurrentPage = int.Parse(e.CommandArgument.ToString());
+        CurrentPage = int.Parse(e.CommandArgument.ToString()); // jump to the page number that was clicked
         ViewState["CurrentPage"] = CurrentPage;
         LoadCourses();
     }
 
-    // Enroll button handler — called via JavaScript
     protected void btnEnroll_Click(object sender, EventArgs e)
     {
-        if (Session["UserId"] == null)
+        if (Session["UserId"] == null) // not logged in — redirect to login
         {
             Response.Redirect("Login.aspx");
             return;
@@ -194,6 +193,7 @@ public partial class CourseList : Page
         {
             conn.Open();
 
+            // check the course is still published before enrolling
             SqlCommand publishCheckCmd = new SqlCommand(
                 "SELECT COUNT(*) FROM Courses WHERE course_id=@cid AND published=1", conn);
             publishCheckCmd.Parameters.AddWithValue("@cid", courseId);
@@ -204,7 +204,7 @@ public partial class CourseList : Page
                 return;
             }
 
-            // Check if already enrolled
+            // check if already enrolled — avoid inserting a duplicate row
             SqlCommand checkCmd = new SqlCommand(
                 "SELECT COUNT(*) FROM Enrollment WHERE user_id=@uid AND course_id=@cid", conn);
             checkCmd.Parameters.AddWithValue("@uid", userId);
@@ -212,12 +212,11 @@ public partial class CourseList : Page
 
             if ((int)checkCmd.ExecuteScalar() > 0)
             {
-                // Already enrolled — go to lesson
-                Response.Redirect("Lesson.aspx?courseId=" + courseId);
+                Response.Redirect("Lesson.aspx?courseId=" + courseId); // already enrolled, go straight to lesson
                 return;
             }
 
-            // Insert enrollment record
+            // insert new enrollment record
             SqlCommand cmd = new SqlCommand(
                 "INSERT INTO Enrollment (user_id, course_id) VALUES (@uid, @cid)", conn);
             cmd.Parameters.AddWithValue("@uid", userId);
@@ -225,8 +224,7 @@ public partial class CourseList : Page
             cmd.ExecuteNonQuery();
         }
 
-        // Redirect directly to the lesson page after successful enrollment
-        Response.Redirect("Lesson.aspx?courseId=" + courseId);
+        Response.Redirect("Lesson.aspx?courseId=" + courseId); // go to first lesson after enrolling
     }
 
     private void ShowMessage(string msg, bool success)
@@ -236,14 +234,14 @@ public partial class CourseList : Page
         lblMessage.Visible = true;
     }
 
-    // Returns correct action button HTML based on enrollment and login state
+    // returns different button HTML depending on whether the student is logged in / enrolled
     protected string GetActionButton(object courseId, object isEnrolled)
     {
         int cid = Convert.ToInt32(courseId);
 
         if (Session["UserId"] == null)
         {
-            // Not logged in — show enroll that redirects to login
+            // not logged in — clicking Enroll sends to login page
             return string.Format(
                 "<a href=\"Login.aspx\" class=\"btn btn-outline btn-sm btn-block\">Enroll Now</a>");
         }
@@ -252,11 +250,13 @@ public partial class CourseList : Page
 
         if (enrolled)
         {
+            // already enrolled — show Continue Learning
             return string.Format(
                 "<a href=\"Lesson.aspx?courseId={0}\" class=\"btn btn-primary btn-sm btn-block\">Continue Learning</a>", cid);
         }
         else
         {
+            // not enrolled — clicking sets the hidden field then triggers btnEnroll via JavaScript
             return string.Format(
                 "<a href=\"CourseList.aspx?enroll={0}\" class=\"btn btn-outline btn-sm btn-block\" " +
                 "onclick=\"document.getElementById('{1}').value='{0}'; document.getElementById('{2}').click(); return false;\">Enroll Now</a>",
@@ -266,7 +266,7 @@ public partial class CourseList : Page
         }
     }
 
-    // CSS helper methods
+    // these three helpers return CSS class names based on category for card colours
     protected string GetThumbClass(string cat)
     {
         switch (cat.ToLower())
@@ -295,7 +295,7 @@ public partial class CourseList : Page
         }
     }
 
-    protected string GetCatIcon(string cat)
+    protected string GetCatIcon(string cat) // returns a Unicode emoji for the category thumbnail
     {
         switch (cat.ToLower())
         {

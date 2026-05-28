@@ -6,8 +6,10 @@
     Date:        23/5/2026
 --%>
 
+<%-- fills the <title> tag in the browser tab --%>
 <asp:Content ID="Content1" ContentPlaceHolderID="cphTitle" runat="server">Home</asp:Content>
 
+<%-- main body content goes inside this block --%>
 <asp:Content ID="Content2" ContentPlaceHolderID="cphContent" runat="server">
 
     <!-- ===== HERO SECTION ===== -->
@@ -21,6 +23,7 @@
                     real-time progress tracking &mdash; all in one platform built for modern learners.
                 </p>
                 <div class="hero-actions">
+                    <%-- server-side link control; NavigateUrl sets where it goes --%>
                     <asp:HyperLink ID="hlStartLearning" runat="server"
                         NavigateUrl="CourseList.aspx"
                         CssClass="btn btn-white btn-lg"
@@ -29,6 +32,7 @@
                     </asp:HyperLink>
                     <a href="Register.aspx" class="btn btn-outline-light btn-lg">Create Account</a>
                 </div>
+                <%-- these numbers are static, not from the database --%>
                 <div class="hero-stats">
                     <div class="hero-stat-item">
                         <div class="hero-stat-num">6+</div>
@@ -48,6 +52,7 @@
                     </div>
                 </div>
             </div>
+            <%-- decorative floating cards, no server data --%>
             <div class="hero-visual">
                 <div class="hero-card-stack">
                     <div class="hero-floating-card card-1">
