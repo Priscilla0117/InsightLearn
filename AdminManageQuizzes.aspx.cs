@@ -163,6 +163,16 @@ public partial class AdminManageQuizzes : Page
         using (SqlConnection conn = new SqlConnection(connStr))
         {
             conn.Open();
+
+            SqlCommand checkCmd = new SqlCommand(
+                "SELECT COUNT(*) FROM Quizzes WHERE course_id = @cid", conn);
+            checkCmd.Parameters.AddWithValue("@cid", courseId);
+            if ((int)checkCmd.ExecuteScalar() > 0)
+            {
+                ShowMessage("This course already has a quiz. Edit or delete it first.", false);
+                return;
+            }
+
             SqlCommand cmd = new SqlCommand(
                 "INSERT INTO Quizzes (quiz_title, course_id) VALUES (@title, @cid)", conn);
             cmd.Parameters.AddWithValue("@title", title);
@@ -171,7 +181,7 @@ public partial class AdminManageQuizzes : Page
         }
 
         pnlAddQuiz.Visible = false;
-        ShowMessage("&#10003; Quiz added successfully!", true);
+        ShowMessage("Quiz added successfully!", true);
         LoadQuizzes();
     }
 
