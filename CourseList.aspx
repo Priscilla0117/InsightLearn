@@ -38,7 +38,7 @@
             <asp:TextBox ID="txtSearch" runat="server"
                 CssClass="form-control"
                 placeholder="&#128269; Search courses..."
-                AutoPostBack="false" />
+                AutoPostBack="false" /> <%--wait until user click Search button only send data--%>
         </div>
 
         <%-- AutoPostBack="true": page reloads and re-filters as soon as user picks a category --%>

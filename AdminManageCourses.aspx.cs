@@ -102,7 +102,7 @@ public partial class AdminManageCourses : Page
 
     protected void ddlCategoryFilter_Changed(object sender, EventArgs e)
     {
-        gvCourses.PageIndex = 0;
+        gvCourses.PageIndex = 0; // reset to first page before searching
         LoadCourses();
     }
 
@@ -112,11 +112,11 @@ public partial class AdminManageCourses : Page
         LoadCourses();
     }
 
-    protected void btnShowAdd_Click(object sender, EventArgs e)
+    protected void btnShowAdd_Click(object sender, EventArgs e) // Add New Course is clicked
     {
         pnlAddCourse.Visible  = true;  // show the Add form
-        pnlEditCourse.Visible = false; // hide the Edit form
-        txtAddName.Text        = "";
+        pnlEditCourse.Visible = false; // hide the Edit form if it was open
+        txtAddName.Text        = "";   // clear all the text box
         txtAddDescription.Text = "";
         ddlAddCategory.SelectedIndex = 0;
     }
@@ -128,7 +128,8 @@ public partial class AdminManageCourses : Page
 
     protected void btnAddCourse_Click(object sender, EventArgs e)
     {
-        if (!Page.IsValid) return; // stop if any validator failed
+        if (!Page.IsValid) // stop if any validator failed
+            return; 
 
         string name     = txtAddName.Text.Trim();
         string desc     = txtAddDescription.Text.Trim();
@@ -145,7 +146,7 @@ public partial class AdminManageCourses : Page
             cmd.Parameters.AddWithValue("@name", name);
             cmd.Parameters.AddWithValue("@desc", desc);
             cmd.Parameters.AddWithValue("@cat",  category);
-            cmd.ExecuteNonQuery(); // runs the INSERT, returns no data
+            cmd.ExecuteNonQuery(); // run INSERT command but don't return rows
         }
 
         pnlAddCourse.Visible = false;
@@ -153,14 +154,14 @@ public partial class AdminManageCourses : Page
         LoadCourses(); // refresh the grid to show the new course
     }
 
-    // fires when any button inside a GridView row is clicked
+    // figure out which button was clicked in which row, and what to do next
     protected void gvCourses_RowCommand(object sender, GridViewCommandEventArgs e)
     {
-        // ignore built-in pager commands (CommandArgument would be "Prev"/"Next", not a course_id)
+        // if "CommandName" button was not clicked either, then return
         if (e.CommandName != "EditCourse" && e.CommandName != "DeleteCourse") return;
-
-        int courseId = int.Parse(e.CommandArgument.ToString()); // course_id from the clicked row
-
+        // grabs course_id and convert into integer
+        int courseId = int.Parse(e.CommandArgument.ToString()); 
+        // route the flow to different method
         if (e.CommandName == "EditCourse")
         {
             LoadCourseForEdit(courseId);
@@ -181,27 +182,27 @@ public partial class AdminManageCourses : Page
             conn.Open();
             SqlCommand cmd = new SqlCommand(
                 "SELECT course_id, course_name, description, category FROM Courses WHERE course_id = @cid", conn);
-            cmd.Parameters.AddWithValue("@cid", courseId);
+            cmd.Parameters.AddWithValue("@cid", courseId); // place userinput to the @cid
             SqlDataReader reader = cmd.ExecuteReader(); // reads rows one by one
 
-            if (reader.Read())
+            if (reader.Read()) //moves to first row and returns true if courseid exists
             {
-                hdnEditCourseId.Value    = reader["course_id"].ToString();   // save ID for the Save button
-                txtEditName.Text         = reader["course_name"].ToString();
+                hdnEditCourseId.Value    = reader["course_id"].ToString();   // save ID inside a hdnEditCourseId when user click "Save Changes"
+                txtEditName.Text         = reader["course_name"].ToString(); //grab text from course_name in database and push to screen TextBoxes
                 txtEditDescription.Text  = reader["description"].ToString();
-                ddlEditCategory.SelectedValue = reader["category"].ToString();
+                ddlEditCategory.SelectedValue = reader["category"].ToString(); // take category from db
             }
         }
 
         pnlEditCourse.Visible = true;  // show the Edit form
-        pnlAddCourse.Visible  = false;
+        pnlAddCourse.Visible  = false; // hides the Add Course
     }
-
+    // when user click the "Save Changes" button on Edit form
     protected void btnSaveEdit_Click(object sender, EventArgs e)
     {
         if (!Page.IsValid) return;
 
-        int courseId    = int.Parse(hdnEditCourseId.Value); // get the ID saved when Edit was opened
+        int courseId    = int.Parse(hdnEditCourseId.Value); // get the course_ID that need to update
         string name     = txtEditName.Text.Trim();
         string desc     = txtEditDescription.Text.Trim();
         string category = ddlEditCategory.SelectedValue;
@@ -220,11 +221,11 @@ public partial class AdminManageCourses : Page
             cmd.ExecuteNonQuery();
         }
 
-        pnlEditCourse.Visible = false;
+        pnlEditCourse.Visible = false; //hide edit pannel
         ShowMessage("&#10003; Course updated successfully!", true);
         LoadCourses();
     }
-
+    // Cancle changes in Edit form
     protected void btnCancelEdit_Click(object sender, EventArgs e)
     {
         pnlEditCourse.Visible = false; // hide the Edit form
@@ -248,7 +249,7 @@ public partial class AdminManageCourses : Page
         LoadCourses();
     }
 
-    // returns a CSS class name based on category, used for the coloured tag badge
+    // if category text matches, returns CSS class name for the coloured tag badge
     protected string GetTagClass(string cat)
     {
         switch (cat.ToLower())
@@ -267,7 +268,7 @@ public partial class AdminManageCourses : Page
     private void ShowMessage(string msg, bool success)
     {
         lblMessage.Text     = msg;
-        lblMessage.CssClass = success ? "alert alert-success" : "alert alert-danger";
-        lblMessage.Visible  = true;
+        lblMessage.CssClass = success ? "alert alert-success" : "alert alert-danger"; //if success, green; else red
+        lblMessage.Visible  = true; // message block appear on screen 
     }
 }
